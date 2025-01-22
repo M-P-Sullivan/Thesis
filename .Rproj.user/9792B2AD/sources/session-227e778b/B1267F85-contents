@@ -1,0 +1,47 @@
+# Lab 1
+
+# Library
+library(haven) #to import STATA files; to install: install.packages("haven")
+library(MASS) #robust regressions
+
+
+# Load dataset:
+setwd("C:/Users/sully/OneDrive/Documents/Academics/MAPSS/Intro to Causal Inference/R Material")
+#this was the desired directory of a previous year's TA from 2024--make sure to use your own!
+data_orig <- read_dta("Lab_1.dta")
+
+
+# What are the most important variables?
+# What are the dependent/ independent variables?
+# What should be recoded?
+#   
+# Let's focus on two variables first:
+# Type of classroom in grade 1 affecting reading score in grade 1.
+# 
+# Dep.Var.: treadss1
+# Indep.Var.: cltype1
+
+# STEP 1: DESCRIPTIVES AND CLEANING
+# Let's investigate these variables and see if we need to clean them:
+  
+# Dependent variable:
+summary(data_orig$treadss1)
+hist(data_orig$treadss1)
+sum(is.na(data_orig$treadss1))
+
+# Independent variable:
+table(data_orig$cltype1) #1=small classroom, 2=regular, 3=reg+aide
+sum(is.na(data_orig$cltype1))
+
+# What if we want a treatment variable for being in a small class?
+data_orig$treat <- ifelse(data_orig$cltype1==1, 1, 0)
+# Let's check
+table(data_orig$treat) #1=small classroom, 0=not small
+sum(is.na(data_orig$treat))
+
+# STEP 2: NAIVE ATE
+# Discuss on the board the identification and estimation strategies. 
+Reg_OLS <- lm(treadss1 ~ treat, data=data_orig)
+summary(Reg_OLS)
+
+# Future Labs: we'll look at effect size, potential confounders, missing data
