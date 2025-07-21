@@ -2,7 +2,9 @@
 title: "Appellate Data Exploratory Analysis"
 author: "Michael Sullivan"
 date: "`r Sys.Date()`"
-output: html_document
+output:
+  pdf_document: default
+  html_document: default
 ---
 
 The below code consists of initial exploratory data analysis I am pursuing for a database of over 15,000 randomly sampled federal appellate court decisions between 1925 and 1996.
@@ -11,10 +13,12 @@ The below code consists of initial exploratory data analysis I am pursuing for a
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{r}
+```{r, echo=TRUE, warning=FALSE, message=FALSE}
 library(here)
 library(ggplot2)
 library(dplyr)
+```
+```{r}
 
 data_path <- here("cta96.csv")
 data <- read.csv(data_path)
@@ -172,7 +176,7 @@ for (i in 0:11) {
     ggtitle("Proportion of cases within this circuit by result") +
     xlab("Year") +
     ylab("Values") +
-    scale_color_manual(values = c("blue", "red", "green")) +  
+    scale_color_manual(values = c("blue", "green", "red")) +  
     theme_minimal() +
     guides(color = guide_legend(order = 1),
          shape = guide_legend(order = 2))

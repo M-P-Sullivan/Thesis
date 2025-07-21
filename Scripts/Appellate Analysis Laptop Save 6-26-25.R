@@ -1,5 +1,7 @@
 ### Packages----------
 
+# install.packages("ranger")
+# install.packages("haven")
 # install.packages("here")
 # install.packages("ggplot2")
 # install.packages("dplyr")
@@ -62,10 +64,62 @@ grouped_treat_data_long <- data.frame(
 ggplot(grouped_treat_data_long, aes(x = years, y = values, color = group)) +
   geom_point(size = 2) +                     
   ggtitle("Proportion of cases by result") +
+  geom_smooth(method = "loess", se = FALSE) +
   xlab("Year") +
   ylab("Values") +
   scale_color_manual(values = c("blue", "green", "red")) +  
   theme_minimal()
+
+### Research question descriptive data
+
+## PRE-1960 DATA
+
+# Get indices for years <= 1960
+pre_1960_indices <- which(years <= 1960)
+
+# Calculate mean and standard deviation of affirmed proportion before 1960
+mean_affirm_pre1960 <- mean(year_percent_affirmed[pre_1960_indices])
+sd_affirm_pre1960 <- sd(year_percent_affirmed[pre_1960_indices])
+
+print(paste("Mean affirmed proportion before 1960:", mean_affirm_pre1960))
+print(paste("SD affirmed proportion before 1960:", sd_affirm_pre1960))
+
+pre_1960_data <- data.frame(
+  year = years[pre_1960_indices],
+  affirm_rate = year_percent_affirmed[pre_1960_indices]
+)
+
+# Fit linear regression
+lm_affirm_pre1960 <- lm(affirm_rate ~ year, data = pre_1960_data)
+summary(lm_affirm_pre1960)
+
+# 1961–1980
+mid_indices <- which(years >= 1961 & years <= 1980)
+mean_affirm_61_80 <- mean(year_percent_affirmed[mid_indices])
+sd_affirm_61_80 <- sd(year_percent_affirmed[mid_indices])
+print(paste("Mean affirmed proportion 1961–1980:", mean_affirm_61_80))
+print(paste("SD affirmed proportion 1961–1980:", sd_affirm_61_80))
+
+mid_data <- data.frame(
+  year = years[mid_indices],
+  affirm_rate = year_percent_affirmed[mid_indices]
+)
+lm_affirm_61_80 <- lm(affirm_rate ~ year, data = mid_data)
+summary(lm_affirm_61_80)
+
+# 1981–end
+post_indices <- which(years >= 1981)
+mean_affirm_post1980 <- mean(year_percent_affirmed[post_indices])
+sd_affirm_post1980 <- sd(year_percent_affirmed[post_indices])
+print(paste("Mean affirmed proportion after 1980:", mean_affirm_post1980))
+print(paste("SD affirmed proportion after 1980:", sd_affirm_post1980))
+
+post_data <- data.frame(
+  year = years[post_indices],
+  affirm_rate = year_percent_affirmed[post_indices]
+)
+lm_affirm_post1980 <- lm(affirm_rate ~ year, data = post_data)
+summary(lm_affirm_post1980)
 
 ### Exploring decision results more granularly-------
 
@@ -111,14 +165,14 @@ ggplot(filtered_data, aes(x = years, y = values, color = factor(group))) +
   theme_minimal()
 
 filtered_data <- individual_treat_data_long %>%
-  filter(group == 5 | group == 6|group == 9|group == 10)
+  filter(group == 5 | group == 6|group == 9|group == 10 | group == 0)
 
 ggplot(filtered_data, aes(x = years, y = values, color = factor(group))) +
   geom_point(size = 2) +                     # Points for both sets
   ggtitle("Proportion of cases by result") +
   xlab("Year") +
   ylab("Values") +
-  scale_color_manual(values = c("blue", "red", "green", "purple")) +  # Set custom colors
+  scale_color_manual(values = c("blue", "red", "green", "purple", "orange")) +  # Set custom colors
   theme_minimal()
 
 grouped_circuit_treat_data_long <- data.frame(

@@ -1,5 +1,7 @@
 ### Packages----------
 
+# install.packages("ranger")
+# install.packages("haven")
 # install.packages("here")
 # install.packages("ggplot2")
 # install.packages("dplyr")
@@ -111,14 +113,14 @@ ggplot(filtered_data, aes(x = years, y = values, color = factor(group))) +
   theme_minimal()
 
 filtered_data <- individual_treat_data_long %>%
-  filter(group == 5 | group == 6|group == 9|group == 10)
+  filter(group == 5 | group == 6|group == 9|group == 10 | group == 0)
 
 ggplot(filtered_data, aes(x = years, y = values, color = factor(group))) +
   geom_point(size = 2) +                     # Points for both sets
   ggtitle("Proportion of cases by result") +
   xlab("Year") +
   ylab("Values") +
-  scale_color_manual(values = c("blue", "red", "green", "purple")) +  # Set custom colors
+  scale_color_manual(values = c("blue", "red", "green", "purple", "orange")) +  # Set custom colors
   theme_minimal()
 
 grouped_circuit_treat_data_long <- data.frame(
